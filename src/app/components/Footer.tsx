@@ -3,61 +3,43 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDownIcon } from '@heroicons/react/24/outline'; // Icono
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { FaWhatsapp } from "react-icons/fa";
 
 const submenuItems = [
-  { title: "Seguridad Física y Electrónica", href: "#seguridad" },
-  { title: "Infraestructura Física", href: "#infraestructura" },
-  { title: "Data Center", href: "#data-center" },
-  { title: "Sistemas Eléctricos", href: "#electricos" },
-  { title: "Servicios de Gestión y Diseño", href: "#gestion" },
-  { title: "Impresión Medio y Alto Volumen", href: "#impresion" },
+  { title: "Cámaras de seguridad", href: "/camaras-de-seguridad" },
+  { title: "Paneles solares", href: "/paneles-solares" },
+  { title: "Cableado estructurado", href: "/cableado-estructurado" },
+  { title: "Arquitectura WIFI", href: "/arquitectura-wifi" },
+  { title: "Nodos de red", href: "/nodos-de-red" },
 ];
 
 const Footer = () => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
   return (
-    <footer className="bg-gray-900 text-white py-16 px-8"> {/* Fondo más oscuro */}
+    <footer className="bg-gray-900 text-white py-16 px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-        {/* Columna 1: Logo */}
         <div className="mb-4 md:mb-0">
           <div className="w-40 mb-4">
-            <Image
-              src="/logo-text-white.png"
-              alt="CZC Projects Logo"
-              width={300}
-              height={300}
-              className="w-full h-auto"
-            />
+            <Link href="/">
+                <Image src="/logo-text-white.png" alt="CZC Projects Logo" width={300} height={300} className="w-full h-auto" />
+            </Link>
           </div>
           <p className="text-gray-400 text-sm">
             Innovación de hoy para el éxito de mañana.
           </p>
-          <div className="flex space-x-4 mt-6">
-            {/* Aquí puedes añadir iconos de redes sociales */}
-            {/* <a href="#" className="text-gray-400 hover:text-blue-400"><svg>...</svg></a> */}
-          </div>
         </div>
-
-        {/* Columna 2: Menú Principal */}
         <div>
           <h3 className="font-bold text-lg mb-4 text-blue-400">Menú principal</h3>
           <ul className="space-y-3 text-gray-300">
-            <li><Link href="#nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
+            <li><Link href="/#nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
             <li>
-              <button
-                onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
-                className="hover:text-white flex items-center w-full text-left transition-colors"
-              >
+              <button onClick={() => setIsSubMenuOpen(!isSubMenuOpen)} className="hover:text-white flex items-center w-full text-left transition-colors">
                 ¿Qué hacemos?
-                <ChevronDownIcon
-                  className={`w-4 h-4 ml-1 transform transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : ""}`}
-                />
+                <ChevronDownIcon className={`w-4 h-4 ml-1 transform transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : ""}`} />
               </button>
-              <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${isSubMenuOpen ? "max-h-96 mt-2" : "max-h-0"}`}
-              >
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isSubMenuOpen ? "max-h-96 mt-2" : "max-h-0"}`}>
                 <ul className="pl-4 space-y-2 text-sm text-gray-400">
                   {submenuItems.map((item) => (
                     <li key={item.title}>
@@ -67,32 +49,23 @@ const Footer = () => {
                 </ul>
               </div>
             </li>
-            <li><Link href="#blog" className="hover:text-white transition-colors">Blog</Link></li>
-            <li><Link href="#contacto" className="hover:text-white transition-colors">Contacto</Link></li>
+            <li><Link href="/#blog" className="hover:text-white transition-colors">Blog</Link></li>
+            <li><Link href="/#contacto" className="hover:text-white transition-colors">Contacto</Link></li>
           </ul>
         </div>
-
-        {/* Columna 3: Contactos */}
         <div>
           <h3 className="font-bold text-lg mb-4 text-blue-400">Contactos</h3>
           <ul className="space-y-3 text-gray-300">
             <li>
-              <a href="mailto:hola@czcprojects.com" className="hover:text-white transition-colors">
-                hola@czcprojects.com
+              <a href="mailto:contact@czcprojects.com" className="hover:text-white transition-colors">
+                contact@czcprojects.com
               </a>
             </li>
-            {/* Puedes añadir más información de contacto aquí */}
-          </ul>
-        </div>
-
-        {/* Columna 4: Legal */}
-        <div>
-          <h3 className="font-bold text-lg mb-4 text-blue-400">Legal</h3>
-          <ul className="space-y-3 text-gray-300">
             <li>
-              <Link href="#aviso-privacidad" className="hover:text-white transition-colors">
-                Aviso de privacidad
-              </Link>
+              <a href="https://wa.me/523330278673" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 hover:text-white transition-colors">
+                <FaWhatsapp className="h-5 w-5" />
+                <span>33 3027 8673</span>
+              </a>
             </li>
           </ul>
         </div>
