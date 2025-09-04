@@ -4,7 +4,7 @@ import { CheckIcon, SunIcon, CurrencyDollarIcon, GlobeAltIcon, BoltIcon, CogIcon
 
 // --- REEMPLAZA ESTA INFORMACIÓN PARA CADA PÁGINA ---
 const heroInfo = {
-  title: "Paneles Solares",
+  title: "Deja que el sol trabaje por ti",
   image: "/panelessolares.jpg"
 };
 
