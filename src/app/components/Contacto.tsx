@@ -60,7 +60,7 @@ const Contacto = () => {
             <dl className="mt-10 space-y-4 text-base leading-7 text-gray-600">
               <div className="flex gap-x-4">
                 <dt className="flex-none"><span className="sr-only">Dirección</span><BuildingOffice2Icon className="h-7 w-6 text-gray-400" aria-hidden="true" /></dt>
-                <dd>Zapopan, Jalisco, México</dd>
+                <dd>Guadalajara, Jalisco, México</dd>
               </div>
               <div className="flex gap-x-4">
                 <dt className="flex-none"><span className="sr-only">Teléfono</span><PhoneIcon className="h-7 w-6 text-gray-400" aria-hidden="true" /></dt>

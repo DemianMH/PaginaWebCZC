@@ -21,6 +21,13 @@ const marcas = [
   { name: "Panduit", src: "/panduit.png" },
   { name: "Synology", src: "/synology.png" },
   { name: "TP-Link", src: "/tplink.png" },
+  { name: "linkedpro", src: "/linkedpro.png" },
+  { name: "Ubiquiti", src: "/ubiquiti.png" },
+  { name: "aufit", src: "/aufit.png" },
+  { name: "altai", src: "/altai.png" },
+  { name: "grandstream", src: "/grandstream.png" },
+  { name: "charofil", src: "/charofil.png" },
+  { name: "accesspro", src: "/accesspro.png" },
 ];
 
 const MarqueeRow = ({ items, reverse = false }: { items: {name: string, src: string}[], reverse?: boolean }) => {

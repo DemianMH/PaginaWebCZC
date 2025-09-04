@@ -1,7 +1,30 @@
+"use client"; // Necesario para usar hooks de React para la animación
+
 import Image from "next/image";
 import { VideoCameraIcon, SunIcon, ServerStackIcon, WifiIcon, GlobeAltIcon } from '@heroicons/react/24/solid';
+import { useState, useEffect } from "react";
+
+// Array con las rutas de las imágenes que van a rotar
+const images = [
+  "/camarasdeseguridad.jpg",
+  "/panelessolares.jpg",
+  "/cableadoestrucutrado.jpg",
+  "/arquitecturawifi.jpg",
+  "/nodosdered.jpg",
+];
 
 const Soluciones = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    // Cambia la imagen cada 2.5 segundos
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 2500);
+
+    return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
+  }, []);
+
   return (
     <section id="soluciones" className="bg-white text-black py-20 sm:py-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -38,14 +61,21 @@ const Soluciones = () => {
             </div>
           </div>
         </div>
-        <div className="w-full h-full">
-          <Image
-            src="/imagenrecurso1.jpg"
-            alt="Proceso de soluciones a la medida"
-            width={700}
-            height={500}
-            className="rounded-lg shadow-lg object-cover"
-          />
+
+        {/* Contenedor del carrusel de imágenes */}
+        <div className="relative w-full h-80 md:h-full min-h-[300px]">
+          {images.map((src, index) => (
+            <Image
+              key={src}
+              src={src}
+              alt={`Solución tecnológica ${index + 1}`}
+              fill
+              priority={index === 0} // Prioriza la carga de la primera imagen
+              className={`rounded-lg shadow-lg object-cover transition-opacity duration-1000 ease-in-out ${
+                index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+          ))}
         </div>
       </div>
     </section>

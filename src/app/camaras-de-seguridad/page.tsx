@@ -57,7 +57,7 @@ export default function CamarasPage() {
         <Image src="/camarasdeseguridad.jpg" alt="Seguridad Física y Electrónica" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            Seguridad Física y Electrónica
+            Lugar vigilado, lugar serguro
           </h1>
         </div>
       </div>
