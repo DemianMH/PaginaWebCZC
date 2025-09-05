@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
-import { FaWhatsapp } from "react-icons/fa";
+
 
 const submenuItems = [
   { title: "Cámaras de seguridad", href: "/camaras-de-seguridad" },

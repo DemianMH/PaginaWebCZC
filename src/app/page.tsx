@@ -10,11 +10,9 @@ import Nosotros from "./components/Nosotros";
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
-  const [showContent, setShowContent] = useState(false);
 
   const handleAnimationComplete = () => {
     setLoading(false);
-    setTimeout(() => setShowContent(true), 100);
   };
 
   return (
