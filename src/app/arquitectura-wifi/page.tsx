@@ -1,10 +1,16 @@
 import Image from 'next/image';
 import Contacto from '../components/Contacto';
 import { CheckIcon, BoltIcon, MapIcon, ChartBarIcon, ShieldCheckIcon, SignalIcon, CogIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Diseño de Arquitectura WIFI de Alta Densidad',
+  description: 'Creamos redes WIFI con cobertura total, rápidas y seguras para empresas y hogares en Guadalajara. Realizamos site surveys y análisis de espectro para un rendimiento óptimo.',
+};
 
 const benefits = [
   { name: 'Cobertura Total', icon: MapIcon },
-  { name: 'Alta Velocidad', icon: BoltIcon }, // Asumiendo que BoltIcon está disponible o usar SignalIcon
+  { name: 'Alta Velocidad', icon: BoltIcon },
   { name: 'Conexión Estable', icon: SignalIcon },
   { name: 'Red Segura', icon: ShieldCheckIcon },
   { name: 'Gestión Centralizada', icon: CogIcon },
@@ -16,13 +22,13 @@ const serviceSections = [
     title: "Diseño y Site Survey",
     description: "Realizamos un análisis exhaustivo de tu espacio para diseñar una red WIFI con cobertura óptima, eliminando zonas muertas y garantizando una señal fuerte y estable en todas las áreas críticas.",
     features: ["Mapas de calor predictivos", "Análisis de espectro", "Planificación de capacidad"],
-    imageUrl: "/wifi-survey.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/wifi-survey.jpg"
   },
   {
     title: "Instalación de Access Points",
     description: "Instalamos puntos de acceso de última generación en ubicaciones estratégicas para maximizar el rendimiento y la cobertura de tu red inalámbrica, asegurando una experiencia de usuario fluida.",
     features: ["Equipos WIFI 6 y 6E", "Instalación profesional y estética", "Configuración de redes para invitados"],
-    imageUrl: "/access-points.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/access-points.jpg"
   },
 ];
 
@@ -30,10 +36,16 @@ export default function WifiPage() {
   return (
     <div className="bg-white text-black">
       <div className="relative h-[50vh] min-h-[300px]">
-        <Image src="/arquitecturawifi.jpg" alt="Arquitectura WIFI" fill className="object-cover" />
+        <Image 
+            src="/arquitecturawifi.jpg" 
+            alt="Arquitectura WIFI de alto rendimiento" 
+            fill 
+            priority
+            className="object-cover" 
+        />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            Arquitectura WIFI
+            Conectividad Inalámbrica sin Límites
           </h1>
         </div>
       </div>
@@ -41,9 +53,9 @@ export default function WifiPage() {
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Conectividad Inalámbrica sin Límites</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Redes WIFI a la Medida de tu Espacio</h2>
             <p className="mt-6 text-lg text-gray-700">
-              Diseñamos e implementamos redes WIFI de alto rendimiento que garantizan una conexión rápida, estable y segura en toda tu empresa u hogar. Desde oficinas hasta grandes almacenes, creamos soluciones a la medida.
+              Diseñamos e implementamos redes WIFI de alto rendimiento que garantizan una conexión rápida, estable y segura en toda tu empresa u hogar. Desde oficinas hasta grandes almacenes, creamos soluciones personalizadas.
             </p>
           </div>
         </div>

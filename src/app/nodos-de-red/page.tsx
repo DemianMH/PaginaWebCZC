@@ -1,6 +1,12 @@
 import Image from 'next/image';
 import Contacto from '../components/Contacto';
 import { CheckIcon, ServerStackIcon, CircleStackIcon, CogIcon, ArrowPathIcon, ShieldCheckIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Nodos de Red e Infraestructura de Servidores',
+  description: 'Construimos el núcleo de tu red con infraestructura robusta. Soluciones de switching, routing e instalación de servidores físicos y virtuales en Guadalajara.',
+};
 
 const benefits = [
   { name: 'Rendimiento Óptimo', icon: ArrowPathIcon },
@@ -16,13 +22,13 @@ const serviceSections = [
     title: "Switching y Routing",
     description: "Implementamos y configuramos switches y routers de alto rendimiento para gestionar el tráfico de tu red de manera eficiente, asegurando que los datos lleguen a su destino de forma rápida y segura.",
     features: ["Configuración de VLANs", "Balanceo de Carga", "Gestión de Ancho de Banda"],
-    imageUrl: "/switching-routing.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/switching-routing.jpg"
   },
   {
     title: "Infraestructura de Servidores",
     description: "Diseñamos e instalamos la infraestructura de servidores que tu empresa necesita, ya sea física o virtual, para garantizar la disponibilidad y el rendimiento de tus aplicaciones críticas.",
     features: ["Servidores Físicos y Virtuales", "Almacenamiento SAN y NAS", "Soluciones de Respaldo"],
-    imageUrl: "/servidores.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/servidores.jpg"
   },
 ];
 
@@ -30,10 +36,16 @@ export default function NodosPage() {
   return (
     <div className="bg-white text-black">
       <div className="relative h-[50vh] min-h-[300px]">
-        <Image src="/nodosdered.jpg" alt="Nodos de Red" fill className="object-cover" />
+        <Image 
+            src="/nodosdered.jpg" 
+            alt="Infraestructura de Nodos de Red y Servidores" 
+            fill 
+            priority
+            className="object-cover" 
+        />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            Nodos de Red e Infraestructura
+            El Corazón de tu Operación Digital
           </h1>
         </div>
       </div>
@@ -41,7 +53,7 @@ export default function NodosPage() {
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">El Corazón de tu Operación Digital</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Infraestructura Robusta y Confiable</h2>
             <p className="mt-6 text-lg text-gray-700">
               Construimos el núcleo de tu red con infraestructura robusta y confiable. Desde los servidores hasta los puntos de conexión, nos aseguramos de que tu flujo de datos sea constante, seguro y eficiente.
             </p>

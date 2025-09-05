@@ -1,67 +1,79 @@
 import Image from 'next/image';
 import Contacto from '../components/Contacto';
 import { CheckIcon, ClockIcon, EyeIcon, BoltIcon, ShieldExclamationIcon, ShieldCheckIcon, CogIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Soluciones de Cámaras de Seguridad y Vigilancia',
+  description: 'Ofrecemos sistemas de vídeo seguridad, alarmas, detección de incendios y control de accesos para proteger tu empresa y hogar en Guadalajara.',
+};
 
 const benefits = [
-  { name: 'Vigilancia 24/7', icon: ClockIcon },
-  { name: 'Monitoreo inteligente', icon: EyeIcon },
-  { name: 'Respuesta rápida', icon: BoltIcon },
-  { name: 'Efecto disuasorio', icon: ShieldExclamationIcon },
-  { name: 'Protección de activos', icon: ShieldCheckIcon },
-  { name: 'Seguridad y control', icon: CogIcon },
+    { name: 'Vigilancia 24/7', icon: ClockIcon },
+    { name: 'Monitoreo inteligente', icon: EyeIcon },
+    { name: 'Respuesta rápida', icon: BoltIcon },
+    { name: 'Efecto disuasorio', icon: ShieldExclamationIcon },
+    { name: 'Protección de activos', icon: ShieldCheckIcon },
+    { name: 'Seguridad y control', icon: CogIcon },
 ];
 
 const serviceSections = [
-  {
-    title: "Vídeo seguridad",
-    description: "Conjunto de dispositivos que incluyen cámaras y software de grabación, diseñados para monitorear y registrar eventos en tiempo real. Estas cámaras capturan imágenes y vídeos que se almacenan de manera segura.",
-    features: ["Cámaras", "NVR", "Servidor todo en uno"],
-    imageUrl: "/videosupervision.jpg"
-  },
-  {
-    title: "Sistema de alarmas",
-    description: "Componente de seguridad pasiva que desempeña un papel crucial al proporcionar alertas tempranas sobre posibles riesgos inminentes, mejorando la capacidad de respuesta.",
-    features: ["Kit completo para panel de alarmas", "Kit de alarmas residencial", "Panel de alambra inalámbrico"],
-    imageUrl: "/sistemaalarma.jpg"
-  },
-  {
-    title: "Detección de incendios",
-    description: "Un sistema de detección de incendios es un conjunto de dispositivos diseñados para detectar de manera temprana cualquier indicio de fuego y alertar de inmediato a las personas pertinentes.",
-    features: ["Detector inalámbrico", "Estación manual de emergencia", "Detector de humo", "Anunciador serial"],
-    imageUrl: "/deteccionincendios.jpg"
-  },
-  {
-    title: "Detección perimetral",
-    description: "Dispositivos especializados diseñados para identificar y registrar cualquier intento de entrada no autorizada. Su función principal es salvaguardar la integridad del perímetro al alertar de inmediato.",
-    features: ["Cable sensor perimetral", "Detector de rayo fotoeléctrico", "Detector de movimiento"],
-    imageUrl: "/deteccionperimetral.jpg"
-  },
-  {
-    title: "Control de accesos",
-    description: "Sistema automatizado que tiene como propósito principal el regular el acceso de individuos a las instalaciones de la organización o áreas internas específicas.",
-    features: ["Lector de proximidad", "Lectores de tarjetas", "Lector de huella", "Lector biométrico"],
-    imageUrl: "/controlacceso.jpg"
-  },
-  {
-    title: "Localización GPS",
-    description: "Sistema con el que podrás tener un mayor control y acceso a la ubicación de los equipos en campo. Mejora la eficiencia operativa y facilita la planificación estratégica.",
-    features: ["Software de despacho y localización GPS", "Kit de localizador vehicular", "Localizador 3G"],
-    imageUrl: "/localizaciongps.jpg"
-  }
+    {
+        title: "Vídeo seguridad",
+        description: "Conjunto de dispositivos que incluyen cámaras y software de grabación, diseñados para monitorear y registrar eventos en tiempo real. Estas cámaras capturan imágenes y vídeos que se almacenan de manera segura.",
+        features: ["Cámaras", "NVR", "Servidor todo en uno"],
+        imageUrl: "/videosupervision.jpg"
+    },
+    {
+        title: "Sistema de alarmas",
+        description: "Componente de seguridad pasiva que desempeña un papel crucial al proporcionar alertas tempranas sobre posibles riesgos inminentes, mejorando la capacidad de respuesta.",
+        features: ["Kit completo para panel de alarmas", "Kit de alarmas residencial", "Panel de alambra inalámbrico"],
+        imageUrl: "/sistemaalarma.jpg"
+    },
+    {
+        title: "Detección de incendios",
+        description: "Un sistema de detección de incendios es un conjunto de dispositivos diseñados para detectar de manera temprana cualquier indicio de fuego y alertar de inmediato a las personas pertinentes.",
+        features: ["Detector inalámbrico", "Estación manual de emergencia", "Detector de humo", "Anunciador serial"],
+        imageUrl: "/deteccionincendios.jpg"
+    },
+    {
+        title: "Detección perimetral",
+        description: "Dispositivos especializados diseñados para identificar y registrar cualquier intento de entrada no autorizada. Su función principal es salvaguardar la integridad del perímetro al alertar de inmediato.",
+        features: ["Cable sensor perimetral", "Detector de rayo fotoeléctrico", "Detector de movimiento"],
+        imageUrl: "/deteccionperimetral.jpg"
+    },
+    {
+        title: "Control de accesos",
+        description: "Sistema automatizado que tiene como propósito principal el regular el acceso de individuos a las instalaciones de la organización o áreas internas específicas.",
+        features: ["Lector de proximidad", "Lectores de tarjetas", "Lector de huella", "Lector biométrico"],
+        imageUrl: "/controlacceso.jpg"
+    },
+    {
+        title: "Localización GPS",
+        description: "Sistema con el que podrás tener un mayor control y acceso a la ubicación de los equipos en campo. Mejora la eficiencia operativa y facilita la planificación estratégica.",
+        features: ["Software de despacho y localización GPS", "Kit de localizador vehicular", "Localizador 3G"],
+        imageUrl: "/localizaciongps.jpg"
+    }
 ];
 
 export default function CamarasPage() {
   return (
     <div className="bg-white text-black">
       <div className="relative h-[50vh] min-h-[300px]">
-        <Image src="/camarasdeseguridad.jpg" alt="Seguridad Física y Electrónica" fill className="object-cover" />
+        <Image
+            src="/camarasdeseguridad.jpg"
+            alt="Sistemas de Seguridad y Vigilancia Electrónica"
+            fill
+            priority
+            className="object-cover"
+        />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            Lugar vigilado, lugar serguro
+            Lugar vigilado, lugar seguro
           </h1>
         </div>
       </div>
-      
+
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">

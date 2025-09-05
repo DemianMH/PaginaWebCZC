@@ -1,6 +1,12 @@
 import Image from 'next/image';
 import Contacto from '../components/Contacto';
 import { CheckIcon, ServerStackIcon, BoltIcon, ChartBarIcon, ShieldCheckIcon, WrenchScrewdriverIcon, CogIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Instalación de Cableado Estructurado y Fibra Óptica',
+  description: 'Diseñamos e implementamos sistemas de cableado estructurado certificados en Guadalajara para garantizar velocidad y confiabilidad en tu red de datos, voz y video.',
+};
 
 const benefits = [
   { name: 'Máxima Velocidad', icon: BoltIcon },
@@ -16,13 +22,13 @@ const serviceSections = [
     title: "Instalación de Cobre y Fibra Óptica",
     description: "Realizamos instalaciones de cableado de cobre (Cat 6, 6A, 7) y fibra óptica para garantizar la máxima velocidad y fiabilidad en la transmisión de datos, voz y video en tu empresa.",
     features: ["Certificación de puntos de red", "Tendido en charola y tubería", "Conectorización y fusiones"],
-    imageUrl: "/fibra-optica.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/fibra-optica.jpg"
   },
   {
     title: "Racks y Gabinetes",
     description: "Diseñamos y organizamos racks de comunicaciones para centralizar tu equipamiento de red de manera ordenada, segura y accesible, facilitando la gestión y el mantenimiento.",
     features: ["Peinado de cableado", "Instalación de organizadores", "Sistemas de ventilación"],
-    imageUrl: "/rack-servidores.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/rack-servidores.jpg"
   },
 ];
 
@@ -30,10 +36,16 @@ export default function CableadoPage() {
   return (
     <div className="bg-white text-black">
       <div className="relative h-[50vh] min-h-[300px]">
-        <Image src="/cableadoestrucutrado.jpg" alt="Cableado Estructurado" fill className="object-cover" />
+        <Image 
+            src="/cableadoestrucutrado.jpg" 
+            alt="Instalación profesional de Cableado Estructurado" 
+            fill
+            priority
+            className="object-cover" 
+        />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            Cableado Estructurado
+            La Base Sólida de tu Red
           </h1>
         </div>
       </div>
@@ -41,7 +53,7 @@ export default function CableadoPage() {
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">La Base Sólida de tu Red</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Infraestructura Confiable y de Alta Velocidad</h2>
             <p className="mt-6 text-lg text-gray-700">
               Un sistema de cableado estructurado es la columna vertebral de cualquier infraestructura tecnológica. Diseñamos e implementamos soluciones ordenadas y certificadas que garantizan la máxima velocidad y confiabilidad para tu red.
             </p>

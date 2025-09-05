@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import Contacto from '../components/Contacto';
 import { CheckIcon, SunIcon, CurrencyDollarIcon, GlobeAltIcon, BoltIcon, CogIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
 
-// --- REEMPLAZA ESTA INFORMACIÓN PARA CADA PÁGINA ---
-const heroInfo = {
-  title: "Deja que el sol trabaje por ti",
-  image: "/panelessolares.jpg"
+export const metadata: Metadata = {
+  title: 'Instalación de Paneles Solares y Sistemas de Energía',
+  description: 'Invierte en energía solar con CZC Projects. Ofrecemos sistemas On-Grid y Off-Grid para reducir costos y operar de manera sostenible en Guadalajara.',
 };
 
 const benefits = [
@@ -22,26 +22,30 @@ const serviceSections = [
     title: "Sistemas On-Grid",
     description: "Conéctate a la red de CFE y reduce tu factura eléctrica al máximo. Vende tu excedente de energía y obtén un retorno de inversión acelerado.",
     features: ["Inversores de última generación", "Paneles de alta eficiencia", "Gestión de trámites"],
-    imageUrl: "/paneles-solares-on-grid.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/paneles-solares-on-grid.jpg"
   },
   {
     title: "Sistemas Off-Grid (Aislados)",
     description: "Genera y almacena tu propia energía en lugares sin acceso a la red eléctrica. Ideal para ranchos, cabañas y operaciones remotas.",
     features: ["Bancos de baterías de litio", "Controladores de carga inteligentes", "Autonomía garantizada"],
-    imageUrl: "/paneles-solares-off-grid.jpg" // CAMBIAR IMAGEN
+    imageUrl: "/paneles-solares-off-grid.jpg"
   },
 ];
-// --- FIN DE LA SECCIÓN PARA REEMPLAZAR ---
 
-
-export default function ServicePageTemplate() {
+export default function PanelesSolaresPage() {
   return (
     <div className="bg-white text-black">
       <div className="relative h-[50vh] min-h-[300px]">
-        <Image src={heroInfo.image} alt={heroInfo.title} fill className="object-cover" />
+        <Image 
+            src="/panelessolares.jpg" 
+            alt="Instalación de Paneles Solares" 
+            fill 
+            priority
+            className="object-cover" 
+        />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <h1 className="text-4xl sm:text-6xl font-bold text-white text-center px-4">
-            {heroInfo.title}
+            Deja que el Sol Trabaje por Ti
           </h1>
         </div>
       </div>
@@ -49,9 +53,9 @@ export default function ServicePageTemplate() {
       <section className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Invierte en Energía Inteligente</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Invierte en Energía Inteligente y Sostenible</h2>
             <p className="mt-6 text-lg text-gray-700">
-              Ofrecemos soluciones de energía solar personalizadas que te permiten tomar el control de tu consumo energético, reducir costos y operar de manera sostenible.
+              Ofrecemos soluciones de energía solar personalizadas que te permiten tomar el control de tu consumo energético, reducir costos significativamente y operar de manera más sostenible.
             </p>
           </div>
         </div>
