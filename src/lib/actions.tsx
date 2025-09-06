@@ -2,11 +2,11 @@
 
 'use server';
 
+import React from 'react'; // <--- ¡ESTA ES LA LÍNEA QUE FALTABA!
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
 
-// Esta es la definición correcta. Incluye la propiedad 'errors' opcional.
 export type FormState = {
   message: string;
   success: boolean;
