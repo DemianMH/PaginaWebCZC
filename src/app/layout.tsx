@@ -3,10 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { URL } from "url"; // Importa URL
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  // --- LÍNEA AÑADIDA AQUÍ ---
+  metadataBase: new URL('https://www.czcprojects.com.mx'),
   title: {
     default: "CZC Projects - Innovación y Seguridad en Guadalajara",
     template: "%s | CZC Projects",
