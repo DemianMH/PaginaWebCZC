@@ -2,7 +2,7 @@
 
 'use server';
 
-import React from 'react'; // <--- ¡ESTA ES LA LÍNEA QUE FALTABA!
+import React from 'react';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
@@ -46,8 +46,10 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
     );
 
     const { data, error } = await resend.emails.send({
-      from: 'Contacto Web <web@czcprojects.com.mx>',
-      to: ['contact@czcprojects.com'],
+      // --- CAMBIO DEFINITIVO AQUÍ ---
+      // Alineamos el remitente con el subdominio autorizado en los DNS
+      from: 'Contacto Web <web@send.czcprojects.com.mx>',
+      to: [process.env.EMAIL_TO!],
       subject: `Nuevo mensaje de: ${nombre}`,
       replyTo: email,
       html: emailHtml,
