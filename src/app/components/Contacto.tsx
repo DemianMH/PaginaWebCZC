@@ -1,9 +1,7 @@
-// src/app/components/Contacto.tsx
-
 'use client';
 
-// --- CAMBIOS AQUÍ ---
-// useActionState y useFormStatus ahora se importan desde 'react'
+// --- CORRECCIÓN AQUÍ ---
+// Separamos las importaciones: useFormStatus viene de 'react-dom'
 import { useActionState, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 import { sendEmail, type FormState } from '@/lib/actions';
@@ -38,7 +36,6 @@ function SubmitButton() {
 }
 
 const Contacto = () => {
-  // --- CAMBIO AQUÍ: de useFormState a useActionState ---
   const [state, formAction] = useActionState(sendEmail, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -100,8 +97,11 @@ const Contacto = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="telefono" className="block text-sm font-semibold leading-6 text-gray-900">Teléfono (Opcional)</label>
-                <div className="mt-2.5"><input type="tel" name="telefono" id="telefono" autoComplete="tel" className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600" /></div>
+                <label htmlFor="telefono" className="block text-sm font-semibold leading-6 text-gray-900">Teléfono</label>
+                <div className="mt-2.5">
+                  <input type="tel" name="telefono" id="telefono" autoComplete="tel" required className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600" />
+                  {state.errors?.telefono && <p className="mt-1 text-sm text-red-600">{state.errors.telefono[0]}</p>}
+                </div>
               </div>
               <div>
                 <label htmlFor="interes" className="block text-sm font-semibold leading-6 text-gray-900">Área de interés</label>
