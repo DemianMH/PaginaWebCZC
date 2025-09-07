@@ -4,10 +4,19 @@ import React from 'react';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
+import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+
+const contactSchema = z.object({
+  nombre: z.string().min(3, { message: 'El nombre es requerido.' }),
+  email: z.string().email({ message: 'Por favor, ingresa un email válido.' }),
+  telefono: z.string().min(10, { message: 'El teléfono debe tener al menos 10 dígitos.' }),
+  interes: z.string().min(1, { message: 'Debes seleccionar un área de interés.' }),
+  mensaje: z.string().min(10, { message: 'El mensaje debe tener al menos 10 caracteres.' }),
+});
 
 export type FormState = {
   message: string;
@@ -18,17 +27,19 @@ export type FormState = {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
-  const nombre = formData.get('nombre') as string;
-  const email = formData.get('email') as string;
-  const telefono = formData.get('telefono') as string;
-  const interes = formData.get('interes') as string;
-  const mensaje = formData.get('mensaje') as string;
+  const validatedFields = contactSchema.safeParse(Object.fromEntries(formData.entries()));
 
-  if (!nombre || !email || !telefono || !interes || !mensaje) {
-    return { message: 'Por favor, completa todos los campos requeridos.', success: false, };
+  if (!validatedFields.success) {
+    return {
+      message: 'Por favor, corrige los errores en el formulario.',
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
   }
+  const { nombre, email, telefono, interes, mensaje } = validatedFields.data;
+
   try {
-    const emailHtml = await render(<ContactTemplate {...{nombre, email, telefono, interes, mensaje}} />);
+    const emailHtml = await render(<ContactTemplate {...validatedFields.data} />);
     await resend.emails.send({
       from: 'Formulario Web CZC <onboarding@resend.dev>',
       to: [process.env.EMAIL_TO!],
@@ -36,21 +47,21 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
       replyTo: email,
       html: emailHtml,
     });
-    return { message: '¡Gracias por tu mensaje! Te contactaremos pronto.', success: true, };
+    return { message: '¡Gracias por tu mensaje! Te contactaremos pronto.', success: true };
   } catch (e) {
     console.error('Error en sendEmail:', e);
-    return { message: 'Hubo un error inesperado en el servidor.', success: false, };
+    return { message: 'Hubo un error inesperado en el servidor.', success: false };
   }
 }
 
 interface QuoteRequestData {
-    nombre: string;
-    email: string;
-    telefono: string;
-    empresa: string;
-    rfc: string;
-    servicios: string;
-    descripcion: string;
+  nombre: string;
+  email: string;
+  telefono: string;
+  empresa?: string;
+  servicios: string;
+  descripcion: string;
+  rfc: string;
 }
 
 const QuoteRequestTemplate: React.FC<{ data: QuoteRequestData }> = ({ data }) => (
@@ -82,7 +93,9 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   }
   
   try {
-    const templatePath = path.join(process.cwd(), 'public/plantilla-cotizacion.docx');
+    // --- CAMBIO DEFINITIVO AQUÍ ---
+    // Esta ruta es más robusta para encontrar archivos en Vercel.
+    const templatePath = path.resolve('./public', 'plantilla-cotizacion.docx');
     const content = fs.readFileSync(templatePath, 'binary');
     const zip = new PizZip(content);
     const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
