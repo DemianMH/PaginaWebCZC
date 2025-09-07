@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     url: "https://www.czcprojects.com.mx",
     images: [
       {
-        url: "/logo-text-white.png",
+        url: "https://www.czcprojects.com.mx/logo-text-black.png",
         width: 1200,
         height: 630,
         alt: "CZC Projects Logo",

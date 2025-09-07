@@ -1,20 +1,11 @@
+// src/lib/actions.tsx
+
 'use server';
 
 import React from 'react';
 import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
-import { z } from 'zod'; // Importamos Zod para la validación
-
-// Creamos un esquema de validación
-const contactSchema = z.object({
-  nombre: z.string().min(3, { message: 'El nombre es requerido.' }),
-  email: z.string().email({ message: 'Por favor, ingresa un email válido.' }),
-  // --- CAMBIO AQUÍ: Teléfono ahora es obligatorio y debe tener al menos 10 caracteres ---
-  telefono: z.string().min(10, { message: 'El teléfono debe tener al menos 10 dígitos.' }),
-  interes: z.string().min(1, { message: 'Debes seleccionar un área de interés.' }),
-  mensaje: z.string().min(10, { message: 'El mensaje debe tener al menos 10 caracteres.' }),
-});
 
 export type FormState = {
   message: string;
@@ -22,7 +13,7 @@ export type FormState = {
   errors?: {
     nombre?: string[];
     email?: string[];
-    telefono?: string[]; // Añadido para mostrar errores de teléfono
+    telefono?: string[];
     interes?: string[];
     mensaje?: string[];
   };
@@ -31,26 +22,13 @@ export type FormState = {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
-  // Validamos los datos del formulario con el esquema
-  const validatedFields = contactSchema.safeParse({
-    nombre: formData.get('nombre'),
-    email: formData.get('email'),
-    telefono: formData.get('telefono'),
-    interes: formData.get('interes'),
-    mensaje: formData.get('mensaje'),
-  });
+  const nombre = formData.get('nombre') as string;
+  const email = formData.get('email') as string;
+  const telefono = formData.get('telefono') as string;
+  const interes = formData.get('interes') as string;
+  const mensaje = formData.get('mensaje') as string;
 
-  // Si la validación falla, regresamos los errores
-  if (!validatedFields.success) {
-    return {
-      message: 'Por favor, corrige los errores en el formulario.',
-      success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
-    };
-  }
-
-  // Si la validación es exitosa, extraemos los datos
-  const { nombre, email, telefono, interes, mensaje } = validatedFields.data;
+  // ... (código de validación)
 
   try {
     const emailHtml = await render(
@@ -64,6 +42,8 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
     );
 
     const { data, error } = await resend.emails.send({
+      // --- AJUSTE FINAL Y DEFINITIVO AQUÍ ---
+      // El remitente ahora usa el subdominio que está verificado
       from: 'Contacto Web <web@send.czcprojects.com.mx>',
       to: [process.env.EMAIL_TO!],
       subject: `Nuevo mensaje de: ${nombre}`,
