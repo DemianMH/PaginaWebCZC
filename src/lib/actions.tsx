@@ -7,16 +7,11 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
 
+// Definimos el estado del formulario de manera clara.
 export type FormState = {
   message: string;
   success: boolean;
-  errors?: {
-    nombre?: string[];
-    email?: string[];
-    telefono?: string[];
-    interes?: string[];
-    mensaje?: string[];
-  };
+  errors?: Record<string, string[]>; // Para errores de validación
 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -28,7 +23,13 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   const interes = formData.get('interes') as string;
   const mensaje = formData.get('mensaje') as string;
 
-  // ... (código de validación)
+  // Validación simple en el servidor para asegurarnos de que los campos no estén vacíos.
+  if (!nombre || !email || !telefono || !mensaje || !interes) {
+    return {
+      message: 'Por favor, completa todos los campos requeridos.',
+      success: false,
+    };
+  }
 
   try {
     const emailHtml = await render(
@@ -42,19 +43,19 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
     );
 
     const { data, error } = await resend.emails.send({
-      // --- AJUSTE FINAL Y DEFINITIVO AQUÍ ---
-      // El remitente ahora usa el subdominio que está verificado
-      from: 'Contacto Web <web@send.czcprojects.com.mx>',
+      // --- ESTE ES EL CAMBIO CLAVE Y DEFINITIVO ---
+      // Usamos la dirección de envío por defecto de Resend, que siempre está verificada.
+      from: 'Formulario Web CZC <onboarding@resend.dev>',
       to: [process.env.EMAIL_TO!],
       subject: `Nuevo mensaje de: ${nombre}`,
-      replyTo: email,
+      replyTo: email, // Esto asegura que al responder, le escribas al cliente.
       html: emailHtml,
     });
 
     if (error) {
       console.error('Error de Resend:', error);
       return {
-        message: 'Hubo un error al enviar el correo. Intenta de nuevo.',
+        message: 'Hubo un error al conectar con el servicio de correo.',
         success: false,
       };
     }
