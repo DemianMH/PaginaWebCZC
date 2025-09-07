@@ -5,10 +5,10 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
 import { z } from 'zod';
-import PizZip from 'pizzip';
-import Docxtemplater from 'docxtemplater';
 import fs from 'fs';
 import path from 'path';
+import PizZip from 'pizzip';
+import Docxtemplater from 'docxtemplater';
 
 const contactSchema = z.object({
   nombre: z.string().min(3, { message: 'El nombre es requerido.' }),
@@ -94,19 +94,10 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   
   try {
     // --- CAMBIO DEFINITIVO AQUÍ ---
-    // Construimos la URL de forma segura, asegurando que tenga el protocolo https://
-    const host = process.env.VERCEL_URL || 'localhost:3000';
-    const protocol = host.startsWith('localhost') ? 'http://' : 'https://';
-    const templateUrl = `${protocol}${host}/plantilla-cotizacion.docx`;
-    
-    // El resto del código para descargar y procesar el archivo se queda igual
-    const response = await fetch(templateUrl);
-    if (!response.ok) {
-        throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
-    }
-    const content = await response.arrayBuffer();
-    
-    const zip = new PizZip(Buffer.from(content));
+    // Buscamos el archivo en la raíz del proyecto. Esta es la forma más segura para Vercel.
+    const templatePath = path.join(process.cwd(), 'plantilla-cotizacion.docx');
+    const content = fs.readFileSync(templatePath, 'binary');
+    const zip = new PizZip(content);
     const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
 
     doc.render(data);
