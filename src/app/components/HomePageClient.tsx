@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from 'next/dynamic';
+import Link from 'next/link'; // <--- Importa el componente Link
 
 const LandingAnimation = dynamic(() => import("./LandingAnimation"));
 const Soluciones = dynamic(() => import("./Soluciones"));
@@ -11,7 +12,7 @@ const Contacto = dynamic(() => import("./Contacto"));
 const Nosotros = dynamic(() => import("./Nosotros"));
 
 
-export default function HomePage() {
+export default function HomePageClient() { // Cambiado el nombre para evitar conflictos
   const [loading, setLoading] = useState(true);
 
   const handleAnimationComplete = () => {
@@ -43,9 +44,12 @@ export default function HomePage() {
               <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-slow">
                 ¿Qué proyecto quieres <br /> que te realicemos?
               </h1>
-              <button className="bg-blue-600 text-white px-8 py-3 text-lg font-semibold rounded-md hover:bg-blue-700 transition-colors duration-300 animate-fade-in-slow [animation-delay:200ms]">
+              <Link
+                href="/cotiza"
+                className="bg-blue-600 text-white px-8 py-3 text-lg font-semibold rounded-md hover:bg-blue-700 transition-colors duration-300 animate-fade-in-slow [animation-delay:200ms]"
+              >
                 Cotización
-              </button>
+              </Link>
             </div>
           )}
         </div>
