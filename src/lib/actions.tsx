@@ -93,8 +93,6 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   }
   
   try {
-    // --- CAMBIO DEFINITIVO AQUÍ ---
-    // Buscamos el archivo en la raíz del proyecto. Esta es la forma más segura para Vercel.
     const templatePath = path.join(process.cwd(), 'plantilla-cotizacion.docx');
     const content = fs.readFileSync(templatePath, 'binary');
     const zip = new PizZip(content);
