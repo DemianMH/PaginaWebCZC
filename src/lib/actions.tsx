@@ -93,7 +93,7 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   }
   
   try {
-    const templatePath = path.join(process.cwd(), 'public/templates/plantilla-cotizacion.docx');
+    const templatePath = path.join(process.cwd(), 'public/plantilla-cotizacion.docx');
     const content = fs.readFileSync(templatePath, 'binary');
     const zip = new PizZip(content);
     const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
