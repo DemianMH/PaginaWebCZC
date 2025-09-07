@@ -5,11 +5,10 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import { ContactTemplate } from '@/emails/ContactTemplate';
 import { z } from 'zod';
-import fs from 'fs';
-import path from 'path';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 
+// --- SECCIÓN DE CONTACTO (SIN CAMBIOS) ---
 const contactSchema = z.object({
   nombre: z.string().min(3, { message: 'El nombre es requerido.' }),
   email: z.string().email({ message: 'Por favor, ingresa un email válido.' }),
@@ -54,6 +53,7 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   }
 }
 
+// --- SECCIÓN DE COTIZACIÓN (CON LA SOLUCIÓN FINAL) ---
 interface QuoteRequestData {
   nombre: string;
   email: string;
@@ -94,10 +94,18 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   
   try {
     // --- CAMBIO DEFINITIVO AQUÍ ---
-    // Ahora buscamos el archivo junto al código, no en la carpeta 'public'.
-    const templatePath = path.join(process.cwd(), 'src', 'lib', 'plantilla-cotizacion.docx');
-    const content = fs.readFileSync(templatePath, 'binary');
-    const zip = new PizZip(content);
+    // 1. Definimos la URL pública de la plantilla
+    const templateUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/plantilla-cotizacion.docx`;
+    
+    // 2. Descargamos el archivo usando fetch
+    const response = await fetch(templateUrl);
+    if (!response.ok) {
+        throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
+    }
+    const content = await response.arrayBuffer();
+    
+    // 3. Procesamos el archivo como antes
+    const zip = new PizZip(Buffer.from(content));
     const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
 
     doc.render(data);
@@ -111,7 +119,7 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
       subject: `Nueva Cotización Solicitada por: ${data.nombre} (${data.empresa})`,
       replyTo: data.email,
       html: emailHtml,
-      attachments: [{ filename: `Cotizacion_${data.empresa.replace(/ /g, '_')}.docx`, content: buf }],
+      attachments: [{ filename: `Cotizacion_${data.empresa.replace(/ /g, '_')}.docx`, content: buf as Buffer }],
     });
 
     return { message: '¡Gracias! Tu solicitud ha sido enviada. Te contactaremos pronto.', success: true };
