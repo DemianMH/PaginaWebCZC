@@ -57,7 +57,7 @@ const Header = () => {
                 ))}
               </div>
             </div>
-            <Link href="/#cotiza" className="hover:text-blue-400 transition-colors">Cotiza tu proyecto</Link>
+            <Link href="/cotiza" className="hover:text-blue-400 transition-colors">Cotiza tu proyecto</Link>
             <Link href="/#contacto" className="border border-white px-5 py-2 rounded-full hover:bg-blue-600 hover:border-blue-600 transition-all duration-300">Contacto</Link>
           </div>
           <div className="md:hidden">
