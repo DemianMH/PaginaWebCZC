@@ -7,8 +7,9 @@ import { ContactTemplate } from '@/emails/ContactTemplate';
 import { z } from 'zod';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
+import fs from 'fs';
+import path from 'path';
 
-// --- SECCIÓN DE CONTACTO (SIN CAMBIOS) ---
 const contactSchema = z.object({
   nombre: z.string().min(3, { message: 'El nombre es requerido.' }),
   email: z.string().email({ message: 'Por favor, ingresa un email válido.' }),
@@ -53,7 +54,6 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   }
 }
 
-// --- SECCIÓN DE COTIZACIÓN (CON LA SOLUCIÓN FINAL) ---
 interface QuoteRequestData {
   nombre: string;
   email: string;
@@ -94,17 +94,18 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   
   try {
     // --- CAMBIO DEFINITIVO AQUÍ ---
-    // 1. Definimos la URL pública de la plantilla
-    const templateUrl = `${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/plantilla-cotizacion.docx`;
+    // Construimos la URL de forma segura, asegurando que tenga el protocolo https://
+    const host = process.env.VERCEL_URL || 'localhost:3000';
+    const protocol = host.startsWith('localhost') ? 'http://' : 'https://';
+    const templateUrl = `${protocol}${host}/plantilla-cotizacion.docx`;
     
-    // 2. Descargamos el archivo usando fetch
+    // El resto del código para descargar y procesar el archivo se queda igual
     const response = await fetch(templateUrl);
     if (!response.ok) {
         throw new Error(`No se pudo descargar la plantilla: ${response.statusText}`);
     }
     const content = await response.arrayBuffer();
     
-    // 3. Procesamos el archivo como antes
     const zip = new PizZip(Buffer.from(content));
     const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
 
