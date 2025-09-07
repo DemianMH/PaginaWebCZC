@@ -17,7 +17,6 @@ export type FormState = {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// --- Función de Contacto (sin cambios) ---
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
   const nombre = formData.get('nombre') as string;
   const email = formData.get('email') as string;
@@ -44,15 +43,24 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
   }
 }
 
-// --- Lógica para la Cotización ---
-const QuoteRequestTemplate: React.FC<any> = ({ data }) => (
+interface QuoteRequestData {
+    nombre: string;
+    email: string;
+    telefono: string;
+    empresa: string;
+    rfc: string;
+    servicios: string;
+    descripcion: string;
+}
+
+const QuoteRequestTemplate: React.FC<{ data: QuoteRequestData }> = ({ data }) => (
   <div style={{ fontFamily: 'Arial, sans-serif' }}>
     <h1>Nueva Solicitud de Cotización Recibida</h1>
     <p>Se ha generado una cotización pre-llenada y se adjunta en este correo.</p>
     <p><strong>Cliente:</strong> {data.nombre}</p>
     <p><strong>Email:</strong> {data.email}</p>
     <p><strong>Empresa:</strong> {data.empresa}</p>
-    {data.rfc && <p><strong>RFC:</strong> {data.rfc}</p>}
+    {data.rfc && data.rfc !== 'N/A' && <p><strong>RFC:</strong> {data.rfc}</p>}
   </div>
 );
 
@@ -74,7 +82,6 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
   }
   
   try {
-    // --- RUTA CORREGIDA AQUÍ ---
     const templatePath = path.join(process.cwd(), 'public/plantilla-cotizacion.docx');
     const content = fs.readFileSync(templatePath, 'binary');
     const zip = new PizZip(content);
@@ -96,8 +103,12 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
 
     return { message: '¡Gracias! Tu solicitud ha sido enviada. Te contactaremos pronto.', success: true };
 
-  } catch (e: any) {
+  } catch (e: unknown) {
+    let errorMessage = 'Error al generar el documento.';
+    if (e instanceof Error) {
+        errorMessage = e.message;
+    }
     console.error("Error al enviar cotización:", e);
-    return { message: `Error al generar el documento. Asegúrate de que la plantilla esté en la carpeta 'public'.`, success: false };
+    return { message: errorMessage, success: false };
   }
 }
