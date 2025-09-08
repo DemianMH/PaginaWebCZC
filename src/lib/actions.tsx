@@ -28,11 +28,10 @@ export type FormState = {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// --- FUNCIÓN CENTRALIZADA CON LA CORRECCIÓN ---
 async function sendMail(options: {
   to: string;
   subject: string;
-  replyTo: string; // <--- CORRECCIÓN: De 'reply_to' a 'replyTo'
+  replyTo: string;
   html: string;
   attachments?: { filename: string; content: Buffer }[];
 }) {
@@ -40,7 +39,7 @@ async function sendMail(options: {
     from: 'Web CZC Projects <onboarding@resend.dev>',
     to: options.to,
     subject: options.subject,
-    replyTo: options.replyTo, // <--- CORRECCIÓN: De 'options.reply_to' a 'options.replyTo'
+    replyTo: options.replyTo,
     html: options.html,
     attachments: options.attachments,
   });
@@ -65,7 +64,7 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
     await sendMail({
       to: process.env.EMAIL_TO!,
       subject: `Nuevo mensaje de contacto: ${nombre}`,
-      replyTo: email, // Usará el 'replyTo' corregido
+      replyTo: email,
       html: emailHtml,
     });
 
@@ -88,7 +87,7 @@ const QuoteRequestTemplate: React.FC<{ data: any }> = ({ data }) => (
 );
   
 export async function sendQuoteRequest(prevState: FormState, formData: FormData): Promise<FormState> {
-    const data = {
+    const rawData = {
       nombre: formData.get('nombre') as string,
       email: formData.get('email') as string,
       telefono: formData.get('telefono') as string,
@@ -96,15 +95,20 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
       rfc: (formData.get('rfc') as string) || 'N/A',
       servicios: formData.get('servicios') as string,
       descripcion: formData.get('descripcion') as string,
-      fecha: new Date().toLocaleDateString('es-MX'),
-      num_presupuesto: `CZC-${Date.now().toString().slice(-5)}`,
     };
   
-    if (!data.nombre || !data.email || !data.telefono || !data.empresa || !data.servicios || !data.descripcion) {
+    if (!rawData.nombre || !rawData.email || !rawData.telefono || !rawData.empresa || !rawData.servicios || !rawData.descripcion) {
       return { message: 'Por favor completa todos los campos requeridos.', success: false };
     }
     
     try {
+      const dataForDoc = {
+        ...rawData,
+        fecha: new Date().toLocaleDateString('es-MX'),
+        num_presupuesto: `CZC-${Date.now().toString().slice(-5)}`,
+        descripcion: rawData.descripcion.replace(/\n/g, '</w:t><w:br/><w:t>'),
+      };
+      
       const templatePath = path.join(process.cwd(), 'plantilla-cotizacion.docx');
   
       if (!fs.existsSync(templatePath)) {
@@ -112,21 +116,23 @@ export async function sendQuoteRequest(prevState: FormState, formData: FormData)
         return { message: 'Error interno del servidor. No se pudo generar el documento.', success: false };
       }
       
-      const content = fs.readFileSync(templatePath, 'binary');
+      // --- CORRECCIÓN AQUÍ: Leemos el archivo como un Buffer (más robusto) ---
+      const content = fs.readFileSync(templatePath);
+      
       const zip = new PizZip(content);
       const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
   
-      doc.render(data);
+      doc.render(dataForDoc);
   
       const buf = doc.getZip().generate({ type: 'nodebuffer', compression: 'DEFLATE' });
-      const emailHtml = await render(<QuoteRequestTemplate data={data} />);
+      const emailHtml = await render(<QuoteRequestTemplate data={rawData} />);
   
       await sendMail({
         to: process.env.EMAIL_TO!,
-        subject: `Nueva Cotización Solicitada por: ${data.nombre} (${data.empresa})`,
-        replyTo: data.email, // Usará el 'replyTo' corregido
+        subject: `Nueva Cotización Solicitada por: ${rawData.nombre} (${rawData.empresa})`,
+        replyTo: rawData.email,
         html: emailHtml,
-        attachments: [{ filename: `Cotizacion_${data.empresa.replace(/ /g, '_')}.docx`, content: buf as Buffer }],
+        attachments: [{ filename: `Cotizacion_${rawData.empresa.replace(/ /g, '_')}.docx`, content: buf as Buffer }],
       });
   
       return { message: '¡Gracias! Tu solicitud ha sido enviada. Te contactaremos pronto.', success: true };
