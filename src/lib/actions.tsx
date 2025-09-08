@@ -1,3 +1,5 @@
+// src/lib/actions.tsx
+
 'use server';
 
 import React from 'react';
@@ -26,6 +28,24 @@ export type FormState = {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// --- FUNCIÓN CENTRALIZADA CON LA CORRECCIÓN ---
+async function sendMail(options: {
+  to: string;
+  subject: string;
+  replyTo: string; // <--- CORRECCIÓN: De 'reply_to' a 'replyTo'
+  html: string;
+  attachments?: { filename: string; content: Buffer }[];
+}) {
+  return resend.emails.send({
+    from: 'Web CZC Projects <onboarding@resend.dev>',
+    to: options.to,
+    subject: options.subject,
+    replyTo: options.replyTo, // <--- CORRECCIÓN: De 'options.reply_to' a 'options.replyTo'
+    html: options.html,
+    attachments: options.attachments,
+  });
+}
+
 export async function sendEmail(prevState: FormState, formData: FormData): Promise<FormState> {
   const validatedFields = contactSchema.safeParse(Object.fromEntries(formData.entries()));
 
@@ -36,90 +56,87 @@ export async function sendEmail(prevState: FormState, formData: FormData): Promi
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
-  const { nombre, email, telefono, interes, mensaje } = validatedFields.data;
+  
+  const { nombre, email } = validatedFields.data;
 
   try {
     const emailHtml = await render(<ContactTemplate {...validatedFields.data} />);
-    await resend.emails.send({
-      from: 'Formulario Web CZC <onboarding@resend.dev>',
-      to: [process.env.EMAIL_TO!],
-      subject: `Nuevo mensaje de: ${nombre}`,
-      replyTo: email,
+    
+    await sendMail({
+      to: process.env.EMAIL_TO!,
+      subject: `Nuevo mensaje de contacto: ${nombre}`,
+      replyTo: email, // Usará el 'replyTo' corregido
       html: emailHtml,
     });
+
     return { message: '¡Gracias por tu mensaje! Te contactaremos pronto.', success: true };
   } catch (e) {
     console.error('Error en sendEmail:', e);
-    return { message: 'Hubo un error inesperado en el servidor.', success: false };
+    return { message: 'Hubo un error inesperado al enviar el mensaje.', success: false };
   }
 }
 
-interface QuoteRequestData {
-  nombre: string;
-  email: string;
-  telefono: string;
-  empresa?: string;
-  servicios: string;
-  descripcion: string;
-  rfc: string;
-}
-
-const QuoteRequestTemplate: React.FC<{ data: QuoteRequestData }> = ({ data }) => (
-  <div style={{ fontFamily: 'Arial, sans-serif' }}>
-    <h1>Nueva Solicitud de Cotización Recibida</h1>
-    <p>Se ha generado una cotización pre-llenada y se adjunta en este correo.</p>
-    <p><strong>Cliente:</strong> {data.nombre}</p>
-    <p><strong>Email:</strong> {data.email}</p>
-    <p><strong>Empresa:</strong> {data.empresa}</p>
-    {data.rfc && data.rfc !== 'N/A' && <p><strong>RFC:</strong> {data.rfc}</p>}
-  </div>
+const QuoteRequestTemplate: React.FC<{ data: any }> = ({ data }) => (
+    <div style={{ fontFamily: 'Arial, sans-serif' }}>
+      <h1>Nueva Solicitud de Cotización Recibida</h1>
+      <p>Se ha generado una cotización pre-llenada y se adjunta en este correo.</p>
+      <p><strong>Cliente:</strong> {data.nombre}</p>
+      <p><strong>Email:</strong> {data.email}</p>
+      <p><strong>Empresa:</strong> {data.empresa}</p>
+      {data.rfc && data.rfc !== 'N/A' && <p><strong>RFC:</strong> {data.rfc}</p>}
+    </div>
 );
-
-export async function sendQuoteRequest(prevState: FormState, formData: FormData): Promise<FormState> {
-  const data = {
-    nombre: formData.get('nombre') as string,
-    email: formData.get('email') as string,
-    telefono: formData.get('telefono') as string,
-    empresa: formData.get('empresa') as string,
-    rfc: (formData.get('rfc') as string) || 'N/A',
-    servicios: formData.get('servicios') as string,
-    descripcion: formData.get('descripcion') as string,
-    fecha: new Date().toLocaleDateString('es-MX'),
-    num_presupuesto: `CZC-${Date.now().toString().slice(-5)}`,
-  };
-
-  if (!data.nombre || !data.email || !data.telefono || !data.empresa || !data.servicios || !data.descripcion) {
-    return { message: 'Por favor completa todos los campos requeridos.', success: false };
-  }
   
-  try {
-    const templatePath = path.join(process.cwd(), 'plantilla-cotizacion.docx');
-    const content = fs.readFileSync(templatePath, 'binary');
-    const zip = new PizZip(content);
-    const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-
-    doc.render(data);
-
-    const buf = doc.getZip().generate({ type: 'nodebuffer', compression: 'DEFLATE' });
-    const emailHtml = await render(<QuoteRequestTemplate data={data} />);
-
-    await resend.emails.send({
-      from: 'Sistema de Cotizaciones <onboarding@resend.dev>',
-      to: [process.env.EMAIL_TO!],
-      subject: `Nueva Cotización Solicitada por: ${data.nombre} (${data.empresa})`,
-      replyTo: data.email,
-      html: emailHtml,
-      attachments: [{ filename: `Cotizacion_${data.empresa.replace(/ /g, '_')}.docx`, content: buf as Buffer }],
-    });
-
-    return { message: '¡Gracias! Tu solicitud ha sido enviada. Te contactaremos pronto.', success: true };
-
-  } catch (e: unknown) {
-    let errorMessage = 'Error al generar el documento.';
-    if (e instanceof Error) {
-        errorMessage = e.message;
+export async function sendQuoteRequest(prevState: FormState, formData: FormData): Promise<FormState> {
+    const data = {
+      nombre: formData.get('nombre') as string,
+      email: formData.get('email') as string,
+      telefono: formData.get('telefono') as string,
+      empresa: formData.get('empresa') as string,
+      rfc: (formData.get('rfc') as string) || 'N/A',
+      servicios: formData.get('servicios') as string,
+      descripcion: formData.get('descripcion') as string,
+      fecha: new Date().toLocaleDateString('es-MX'),
+      num_presupuesto: `CZC-${Date.now().toString().slice(-5)}`,
+    };
+  
+    if (!data.nombre || !data.email || !data.telefono || !data.empresa || !data.servicios || !data.descripcion) {
+      return { message: 'Por favor completa todos los campos requeridos.', success: false };
     }
-    console.error("Error al enviar cotización:", e);
-    return { message: errorMessage, success: false };
-  }
+    
+    try {
+      const templatePath = path.join(process.cwd(), 'plantilla-cotizacion.docx');
+  
+      if (!fs.existsSync(templatePath)) {
+        console.error("¡ERROR CRÍTICO! No se encontró la plantilla .docx en la ruta:", templatePath);
+        return { message: 'Error interno del servidor. No se pudo generar el documento.', success: false };
+      }
+      
+      const content = fs.readFileSync(templatePath, 'binary');
+      const zip = new PizZip(content);
+      const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+  
+      doc.render(data);
+  
+      const buf = doc.getZip().generate({ type: 'nodebuffer', compression: 'DEFLATE' });
+      const emailHtml = await render(<QuoteRequestTemplate data={data} />);
+  
+      await sendMail({
+        to: process.env.EMAIL_TO!,
+        subject: `Nueva Cotización Solicitada por: ${data.nombre} (${data.empresa})`,
+        replyTo: data.email, // Usará el 'replyTo' corregido
+        html: emailHtml,
+        attachments: [{ filename: `Cotizacion_${data.empresa.replace(/ /g, '_')}.docx`, content: buf as Buffer }],
+      });
+  
+      return { message: '¡Gracias! Tu solicitud ha sido enviada. Te contactaremos pronto.', success: true };
+  
+    } catch (e: unknown) {
+      let errorMessage = 'Ocurrió un error al generar el documento de cotización.';
+      if (e instanceof Error) {
+          errorMessage = e.message;
+      }
+      console.error("Error al procesar la cotización:", e);
+      return { message: errorMessage, success: false };
+    }
 }

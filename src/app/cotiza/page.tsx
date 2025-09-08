@@ -1,6 +1,8 @@
+// src/app/cotiza/page.tsx
+
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useActionState } from 'react'; // <--- CAMBIO: Importamos useActionState de 'react'
 import { useFormStatus } from 'react-dom';
 import { sendQuoteRequest, type FormState } from '@/lib/actions';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
@@ -25,14 +27,14 @@ function SubmitButton() {
 }
 
 export default function CotizaPage() {
-  const [state, formAction] = useActionState(sendQuoteRequest, initialState);
+  const [state, formAction] = useActionState(sendQuoteRequest, initialState); // <--- CAMBIO: Renombramos a useActionState
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state.success) {
       formRef.current?.reset();
     }
-  }, [state.success, state.message]);
+  }, [state.success]);
 
   return (
     <div className="bg-white text-black">
@@ -63,12 +65,10 @@ export default function CotizaPage() {
               <label htmlFor="telefono" className="block text-sm font-semibold leading-6 text-gray-900">Teléfono</label>
               <input type="tel" name="telefono" id="telefono" required className="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600" />
             </div>
-            {/* --- CAMBIOS AQUÍ --- */}
             <div>
               <label htmlFor="empresa" className="block text-sm font-semibold leading-6 text-gray-900">Empresa</label>
               <input type="text" name="empresa" id="empresa" required className="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600" />
             </div>
-             {/* --- CAMPO NUEVO AQUÍ --- */}
             <div className="sm:col-span-2">
               <label htmlFor="rfc" className="block text-sm font-semibold leading-6 text-gray-900">RFC (Opcional)</label>
               <input type="text" name="rfc" id="rfc" className="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600" />
@@ -96,7 +96,7 @@ export default function CotizaPage() {
           <div><SubmitButton /></div>
 
           {state.message && (
-            <div key={Date.now()} className={`mt-4 flex items-center justify-center gap-x-2 text-sm font-semibold ${state.success ? 'text-green-600' : 'text-red-600'}`}>
+            <div key={state.message} className={`mt-4 flex items-center justify-center gap-x-2 text-sm font-semibold ${state.success ? 'text-green-600' : 'text-red-600'}`}>
               {state.success ? <CheckCircleIcon className="h-5 w-5"/> : <ExclamationCircleIcon className="h-5 w-5"/>}
               {state.message}
             </div>

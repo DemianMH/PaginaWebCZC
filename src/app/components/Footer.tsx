@@ -1,3 +1,5 @@
+// src/app/components/Footer.tsx
+
 "use client";
 
 import Image from "next/image";
@@ -5,14 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { FaWhatsapp } from "react-icons/fa";
-
-const submenuItems = [
-  { title: "Cámaras de seguridad", href: "/camaras-de-seguridad" },
-  { title: "Paneles solares", href: "/paneles-solares" },
-  { title: "Cableado estructurado", href: "/cableado-estructurado" },
-  { title: "Arquitectura WIFI", href: "/arquitectura-wifi" },
-  { title: "Nodos de red", href: "/nodos-de-red" },
-];
+// --- CAMBIO AQUÍ: Importamos el tipo y la lista ---
+import { serviceMenuItems, type MenuItem } from "@/lib/navegation";
 
 const Footer = () => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
@@ -41,7 +37,8 @@ const Footer = () => {
               </button>
               <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isSubMenuOpen ? "max-h-96 mt-2" : "max-h-0"}`}>
                 <ul className="pl-4 space-y-2 text-sm text-gray-400">
-                  {submenuItems.map((item) => (
+                  {/* --- CAMBIO AQUÍ: Añadimos el tipo a 'item' --- */}
+                  {serviceMenuItems.map((item: MenuItem) => (
                     <li key={item.title}>
                       <Link href={item.href} className="hover:text-white transition-colors">{item.title}</Link>
                     </li>

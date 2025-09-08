@@ -1,8 +1,8 @@
+// src/app/components/Contacto.tsx
+
 'use client';
 
-// --- CORRECCIÓN AQUÍ ---
-// Separamos las importaciones: useFormStatus viene de 'react-dom'
-import { useActionState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useActionState } from 'react'; // <--- CAMBIO: Importamos useActionState de 'react'
 import { useFormStatus } from 'react-dom';
 import { sendEmail, type FormState } from '@/lib/actions';
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
@@ -36,14 +36,14 @@ function SubmitButton() {
 }
 
 const Contacto = () => {
-  const [state, formAction] = useActionState(sendEmail, initialState);
+  const [state, formAction] = useActionState(sendEmail, initialState); // <--- CAMBIO: Renombramos a useActionState
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state.success) {
       formRef.current?.reset();
     }
-  }, [state.success, state.message]);
+  }, [state.success]);
 
   return (
     <section id="contacto" className="relative bg-white text-black">
@@ -125,7 +125,7 @@ const Contacto = () => {
               <SubmitButton />
               {state.message && (
                 <div
-                  key={Date.now()}
+                  key={state.message}
                   className={`mt-4 flex items-center gap-x-2 text-sm font-semibold animate-fade-in-slow ${
                     state.success ? 'text-green-600' : 'text-red-600'
                   }`}

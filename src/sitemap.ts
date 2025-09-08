@@ -4,7 +4,6 @@ import { MetadataRoute } from 'next'
 export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Reemplaza 'https://www.czcprojects.com' con tu dominio real
   const baseUrl = 'https://www.czcprojects.com.mx';
 
   return [

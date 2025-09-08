@@ -1,18 +1,13 @@
+// src/app/components/Header.tsx
+
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline';
-
-
-const submenuItems = [
-  { title: "Cámaras de seguridad", href: "/camaras-de-seguridad" },
-  { title: "Paneles solares", href: "/paneles-solares" },
-  { title: "Cableado estructurado", href: "/cableado-estructurado" },
-  { title: "Arquitectura WIFI", href: "/arquitectura-wifi" },
-  { title: "Nodos de red", href: "/nodos-de-red" },
-];
+// --- CAMBIO AQUÍ: Importamos el tipo y la lista ---
+import { serviceMenuItems, type MenuItem } from "@/lib/navegation";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,7 +45,8 @@ const Header = () => {
                 <ChevronDownIcon className={`w-4 h-4 ml-1 transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : ""}`} />
               </button>
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-gray-800 text-white rounded-md shadow-lg transition-all duration-300 transform ${isSubMenuOpen ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"}`}>
-                {submenuItems.map((item) => (
+                {/* --- CAMBIO AQUÍ: Añadimos el tipo a 'item' --- */}
+                {serviceMenuItems.map((item: MenuItem) => (
                   <Link key={item.title} href={item.href} onClick={() => setIsSubMenuOpen(false)} className="block px-4 py-3 hover:bg-gray-700 first:rounded-t-md last:rounded-b-md text-sm">
                     {item.title}
                   </Link>
@@ -78,12 +74,13 @@ const Header = () => {
           <div className="w-full max-w-sm mb-8">
             <h3 className="mb-4 text-2xl font-semibold text-center">¿Qué hacemos?</h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-center">
-              {submenuItems.map((item) => (
+              {/* --- CAMBIO AQUÍ: Añadimos el tipo a 'item' --- */}
+              {serviceMenuItems.map((item: MenuItem) => (
                 <Link key={item.title} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="block text-lg text-gray-300 hover:text-blue-400 py-1">{item.title}</Link>
               ))}
             </div>
           </div>
-          <Link href="/#cotiza" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-semibold mb-8 hover:text-blue-400">Cotiza tu proyecto</Link>
+          <Link href="/cotiza" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-semibold mb-8 hover:text-blue-400">Cotiza tu proyecto</Link>
           <Link href="/#contacto" onClick={() => setIsMobileMenuOpen(false)} className="border px-6 py-2 text-xl font-semibold rounded-md">Contacto</Link>
         </div>
       </div>
